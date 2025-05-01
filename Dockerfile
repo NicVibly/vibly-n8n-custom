@@ -1,20 +1,19 @@
-FROM n8nio/n8n
+FROM node:18-bullseye-slim
 
-USER root
+# Installa dipendenze necessarie
+RUN apt-get update && apt-get install -y curl gnupg supervisor
 
-# Installa node + npm e supervisor
-RUN apt-get update && apt-get install -y curl gnupg supervisor \
-  && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-  && apt-get install -y nodejs
+# Installa N8N
+RUN npm install -g n8n
 
-# Copia i file nel container
+# Copia i file custom
 COPY healthcheck-proxy.js /healthcheck-proxy.js
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Installa le dipendenze per il proxy
+# Installa dipendenze del proxy
 RUN npm install express
 
-# Espone la porta per N8N e per il proxy
+# Espone le porte
 EXPOSE 5678 3001
 
 CMD ["/usr/bin/supervisord"]
