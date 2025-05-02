@@ -1,25 +1,18 @@
 FROM node:18-bullseye-slim
 
-# Installa dipendenze di sistema
-RUN apt-get update && apt-get install -y curl gnupg supervisor
+# Installa supervisor e nginx
+RUN apt-get update && apt-get install -y supervisor nginx
 
 # Installa N8N globalmente
 RUN npm install -g n8n
 
-# Crea una cartella per il proxy healthcheck
-WORKDIR /proxy
+# Copia la configurazione di nginx
+COPY nginx.conf /nginx.conf
 
-# Copia i file
-COPY healthcheck-proxy.js .
+# Copia la configurazione di supervisord
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Inizializza npm e installa express
-RUN npm init -y && npm install express
-
-# Torna alla root
-WORKDIR /
-
-# Espone le porte
+# Espone la porta di N8N e quella del healthcheck
 EXPOSE 5678 3001
 
 CMD ["/usr/bin/supervisord"]
