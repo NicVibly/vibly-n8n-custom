@@ -10,5 +10,5 @@ RUN mkdir -p /home/node/.n8n/nodes \
  && cd /home/node/.n8n/nodes \
  && npm init -y >/dev/null \
  && npm install --omit=dev --legacy-peer-deps --ignore-scripts --no-audit --no-fund \
-      @respond-io/n8n-nodes-respond-io@1.12.2 \
+      @respond-io/n8n-nodes-respond-io@1.15.0 \
       n8n-nodes-tallyforms@1.3.3
